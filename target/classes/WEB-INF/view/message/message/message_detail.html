@@ -1,0 +1,50 @@
+@layout("/common/_container.html"){
+<style>
+    p{
+        display: inline-block;
+        padding-top: 7px;
+    }
+</style>
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <input type="hidden" id="id" value="${id}">
+
+            <div class="form-group">
+                <label class="col-sm-2 col-xs-2 control-label" style="text-align: left;padding-top: 7px;margin-left: 40px;width: 110px;">*姓名：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <p id="name"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-xs-2 control-label" style="text-align: left;padding-top: 7px;margin-left: 40px;width: 110px;">*公司：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <p id="company"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-xs-2 control-label" style="text-align: left;padding-top: 7px;margin-left: 40px;width: 110px;">*留言内容：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <p id="content"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-xs-2 control-label" style="text-align: left;padding-top: 7px;margin-left: 40px;width: 110px;">*联系电话：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <p id="phone"></p>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-12">
+                    <label class="col-sm-2 col-xs-2 control-label" style="text-align: right;padding-top: 7px;margin-left: 50px;"></label>
+                    <#button btnCss="danger" name="关闭" id="cancel" icon="" clickFun="MessageInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/message/message/message_info.js"></script>
+@}

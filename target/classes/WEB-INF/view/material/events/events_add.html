@@ -1,0 +1,126 @@
+@layout("/common/_container.html"){
+<style>
+    textarea{
+        resize: none;
+    }
+    span.num {
+        position: absolute;
+        right: 23px;
+        top: 73px;
+    }
+    span.num i {
+        font-style: normal;
+    }
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    input[type="number"]{ -moz-appearance: textfield; }
+    .radio input[type="radio"] + label+input{
+        display: none;
+    }
+    .radio input[type="radio"]:checked + label+input{
+        display: inline-block;
+    }
+    .upImg-div{
+        padding-top: 7px;
+    }
+    .upImg-div ul{
+        overflow: hidden;
+        padding: 0;
+    }
+    .upImg-div ul li{
+        float: left;
+        width: 140px;
+        height: 80px;
+        position: relative;
+        text-align: center;
+        vertical-align: middle;
+        list-style: none;
+        line-height: 100px;
+        margin: 7px 7px 7px 0px;
+    }
+    .upImg-div ul li input{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        display: block;
+        left: 0;
+        top: 0;
+    }
+    .upImg-div ul li img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+    .div-img button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: none;
+        cursor: pointer;
+        border: 0;
+        font-size: 24px;
+        color: #333;
+        outline: none;
+        z-index: 3;
+        line-height: 0;
+    }
+</style>
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal" id="EventsForm">
+
+            <input type="hidden" id="id" value="">
+            <div class="form-group form-inline">
+                <label class="col-sm-3 col-xs-3 control-label">*事件时间：</label>
+                <div class="col-sm-8 ">
+                    <select class="form-control " id="eventYear" name="eventYear" onchange="setDays(this,eventMonth,eventDay)"  style="margin-right: 20px;">
+                    </select>
+                    <select class="form-control " id="eventMonth" name="eventMonth" onchange="setDays(eventYear,this,eventDay)" style="margin-right: 20px;">
+                    </select>
+                    <select class="form-control" id="eventDay" name="eventDay" >
+                        <option value="">不限定</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label">*事件标题：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <input id="title" name="title" maxlength="40" type="text" class="form-control" value="" style="padding-right: 46px;" placeholder="" autocomplete="off">
+                    <span class="num" style="top: 8px;"><i>0</i>/40</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label" style="text-align: right;padding-top: 7px;">事件内容：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <textarea name="" id="content" cols="30" rows="4" class="form-control" maxlength="140"></textarea>
+                    <span class="num"><i>0</i>/140</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label">图片：</label>
+                <div class="col-sm-8 col-xs-8 upImg-div">
+                    <p>长宽推荐尺寸为443*190px，每张图片的大小不超过5M.</p>
+                    <ul>
+                        <li style="border: 1px solid #e5e6e7;border-radius: 3px;">
+                            <i class="fa fa-plus fa-3x"></i>
+                            <input id="images" name="" type="file" data-src="">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <label class="col-sm-3 col-xs-3 control-label"></label>
+                <div class="col-sm-8">
+                    <#button btnCss="info" name="保存" id="ensure" icon="" clickFun="EventsInfoDlg.addSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="" clickFun="EventsInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/material/events/events_info.js"></script>
+@}

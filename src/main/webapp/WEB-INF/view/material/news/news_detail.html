@@ -1,0 +1,181 @@
+@layout("/common/_container.html"){
+<link rel="stylesheet" href="${ctxPath}/static/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css">
+<style>
+    .row{
+        margin-bottom: 20px;
+    }
+    .w-e-toolbar {
+        flex-wrap: wrap;
+    }
+    .editorHeight{
+        height: auto;
+        min-height: 300px;
+        padding: 0;
+        overflow: hidden;
+    }
+    .w-e-text-container{
+        height: 400px !important;
+        /*min-height: 300px;*/
+    }
+    .up-btn{
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    .up-btn input{
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 2;
+        opacity: 0;
+        left: 0;
+        top: 0;
+        position: absolute;
+    }
+    .div-input-sm {
+        width: 250px;
+        height: 140px;
+        position: relative;
+        text-align: center;
+        cursor: pointer;
+    }
+    .div-input input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        display: block;
+        left: 0;
+        top: 0;
+        z-index: 2;
+    }
+    .div-input-sm .div-p {
+        margin-top: 20px;
+    }
+    .div-input p {
+        font-size: 14px;
+        color: #999999;
+        line-height: 20px;
+        margin: 0;
+    }
+    .div-img{
+        width: 250px;
+        height: 140px;
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+    }
+    .div-img button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: none;
+        cursor: pointer;
+        border: 0;
+        font-size: 24px;
+        color: #333;
+        outline: none;
+        z-index: 3;
+    }
+    .div-img img{
+        width: 100%;
+        object-fit: contain;
+        height: 100%;
+    }
+    .radio input[type="radio"] + label+input{
+        display: none;
+    }
+    .radio input[type="radio"]:checked + label+input{
+        display: inline-block;
+    }
+    .form-horizontal .radio{
+        padding-top: 0px;
+    }
+    .w-e-toolbar{
+        display: none;
+    }
+    .w-e-text-container{
+        border: 0 !important;
+    }
+    .div-img button{
+        display: none;
+    }
+</style>
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>新闻资讯详情</h5>
+    </div>
+    <div class="ibox-content">
+        <div class="form-horizontal" id="NewsForm">
+
+            <input type="hidden" id="id" value="${newsInfo.id}">
+            <input type="hidden" id="mainFile" data-val='${newsInfo.mainContent}'>
+
+            <div class="row">
+                <label class="col-sm-1 col-xs-2 control-label">*选择栏目：</label>
+                <div class="col-sm-5 col-xs-8">
+                    <select name="newsType" id="newsType" class="form-control" disabled data-value="${newsInfo.newsType}">
+                        <option value="1">新闻动态</option>
+                        <option value="2">媒体报道</option>
+                        <option value="3">合作交流</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 col-xs-2 control-label">*文章标题：</label>
+                <div class="col-sm-5 col-xs-8">
+                    <input id="title" disabled name="title" type="text" class="form-control" value="${newsInfo.title}" placeholder="2-80字符，支持汉字、数字和一般符号的组合" autocomplete="off">
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-1 col-xs-2 control-label">*正文：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <div id="editor" class="editorHeight form-control" name="mainFile" disabled="disabled">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-1 col-xs-2 control-label">附件：</label>
+                <div class="col-sm-5 col-xs-8">
+                    <span id="fileName" style="display: inline-block;padding-top: 7px;">${newsInfo.fileName}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 col-xs-2 control-label">*展示时间：</label>
+                <div class="col-sm-7 col-xs-8">
+                    <div class="radio" style="display: inline-block;margin-right: 40px;padding-top: 9px;">
+                        <input type="radio" name="time" id="radio" checked="checked" value="2" disabled data-val="${newsInfo.showTime}">
+                        <label for="radio" id="showTime">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 col-xs-2 control-label">*封面图片：</label>
+                <div class="col-sm-5 col-xs-8 upImg-div">
+                    <div class="form-control div-input div-input-sm images">
+                        <input id="coverImage" name="" disabled type="file" max="500kb" data-src="${newsInfo.coverImage}" value="${newsInfo.coverImage}">
+                        <div class="div-p">
+                            <p><i class="fa fa-plus fa-3x"></i></p>
+                            <p>格式说明：长宽推荐尺寸340*200px，大小不超过500kb.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row btn-group-m-t">
+                <label class="col-sm-1 col-xs-2 control-label"></label>
+                <div class="col-sm-5 col-xs-8">
+                    <#button btnCss="danger" name="关闭" id="cancel" icon="" clickFun="NewsInfoDlg.detailClose()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/js/wangEditorReform.js"></script>
+<script src="${ctxPath}/static/modular/material/news/news_info.js"></script>
+<script src="${ctxPath}/static/modular/material/news/news_edit.js"></script>
+<script>
+    editor.$textElem.attr('contenteditable', false);
+</script>
+@}

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.hire.dao.ResumeDao">
+
+    <select id="list" resultType="java.util.Map">
+        SELECT
+            t.id,
+            j.name jobName,
+            t.name,
+            t.sex,
+            DATE_FORMAT(t.birthday, '%Y-%m-%d') birthday,
+            t.phone,
+            t.email,
+            t.resume_name resumeName,
+            t.resume_path resumePath,
+            t.remark,
+            DATE_FORMAT(
+                t.created_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) createdTime,
+            t.is_read isRead
+        FROM
+            resume t
+        LEFT JOIN job j ON t.job_id = j.id
+        WHERE
+            t.is_deleted = 0
+        <if test="condition != null and condition != ''">
+            and (t.name like concat('%', #{condition}, '%') or j.name like concat('%', #{condition}, '%'))
+        </if>
+        <if test="isRead != null">
+            and t.is_read = #{isRead}
+        </if>
+        <if test="jobId != null">
+            and t.job_id = #{jobId}
+        </if>
+        <choose>
+            <when test="orderField != null and orderField !=''">
+                <choose>
+                    <when test="isAsc == true">
+                        <if test="orderField == 'createdTime'">
+                            order by t.created_time ASC
+                        </if>
+                    </when>
+                    <otherwise>
+                        <if test="orderField == 'createdTime'">
+                            order by t.created_time DESC
+                        </if>
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by t.created_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getExportList" resultType="cn.ibdsr.web.modular.hire.transfer.ResumePoiVo">
+        SELECT
+            @rank :=@rank + 1 AS num,
+            a.*
+        FROM
+        (
+            SELECT
+                j.name jobName,
+                t.name,
+                t.sex,
+                DATE_FORMAT(t.birthday, '%Y-%m-%d') birthday,
+                t.phone,
+                t.email,
+                t.resume_name resumeName,
+                t.resume_path resumePath,
+                t.remark,
+                DATE_FORMAT(
+                    t.created_time,
+                    '%Y-%m-%d %H:%i:%s'
+                ) createdTime,
+                t.is_read isRead
+            FROM
+                resume t
+            LEFT JOIN job j ON t.job_id = j.id
+            WHERE
+                t.id in
+            <foreach collection="resumeIds" open="(" separator="," close=")" index="index" item="item">
+                #{item}
+            </foreach>
+            order by t.created_time DESC
+        ) a,
+        (SELECT @rank := 0) b
+    </select>
+</mapper>

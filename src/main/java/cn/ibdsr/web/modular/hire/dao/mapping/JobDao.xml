@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.hire.dao.JobDao">
+
+    <select id="list" resultType="java.util.Map">
+        SELECT
+            t.id,
+            type.name typeName,
+            t.name,
+            t.num,
+            t.sort,
+            COUNT(r.id) resumeCount,
+            t.is_publish isPublish,
+            DATE_FORMAT(
+                t.modified_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) modifiedTime
+        FROM
+            job t
+        LEFT JOIN job_type type ON t.job_type_id = type.id
+        LEFT JOIN resume r ON r.job_id = t.id
+        WHERE
+            t.is_deleted = 0
+        <if test="condition != null and condition != ''">
+            and t.name like concat('%', #{condition}, '%')
+        </if>
+        <if test="jobType != null">
+            AND
+                t.job_type_id = #{jobType}
+        </if>
+        <if test="isPublish != null">
+            AND
+                t.is_publish = #{isPublish}
+        </if>
+        GROUP BY
+            t.id
+        <choose>
+            <when test="orderField != null and orderField !=''">
+                <choose>
+                    <when test="isAsc == true">
+                        <if test="orderField == 'sort'">
+                            order by t.sort ASC, t.modified_time DESC
+                        </if>
+                        <if test="orderField == 'modifiedTime'">
+                            order by t.modified_time ASC
+                        </if>
+                    </when>
+                    <otherwise>
+                        <if test="orderField == 'sort'">
+                            order by t.sort DESC, t.modified_time DESC
+                        </if>
+                        <if test="orderField == 'modifiedTime'">
+                            order by t.modified_time DESC
+                        </if>
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by t.sort ASC, t.modified_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="resumeList" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.name
+        FROM
+            (
+                SELECT
+                    t.id,
+                    t.name,
+                    COUNT(r.id) resumeCount
+                FROM
+                    job t
+                LEFT JOIN resume r ON r.job_id = t.id
+                WHERE
+                    t.is_deleted = 0
+                GROUP BY
+                    t.id
+            ) a
+        WHERE
+            a.resumeCount > 0
+    </select>
+
+    <select id="indexJobList" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            t.id,
+            t.`name`,
+            t.job_duty jobDuty,
+            t.job_require jobRequire,
+            CASE t.num
+                WHEN 0 THEN '若干'
+                ELSE t.num
+            END num
+        FROM
+            job t
+        WHERE
+            t.is_deleted = 0
+        AND t.is_publish = 1
+        <if test="jobType != null and jobType != 0">
+            AND t.job_type_id = #{jobType}
+        </if>
+    </select>
+</mapper>

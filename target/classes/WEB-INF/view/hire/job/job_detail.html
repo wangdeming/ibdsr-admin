@@ -1,0 +1,100 @@
+@layout("/common/_container.html"){
+<style>
+    textarea{
+        resize: none;
+    }
+    span.num {
+        position: absolute;
+        right: 23px;
+        top: 190px;
+    }
+    span.num i {
+        font-style: normal;
+    }
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    input[type="number"]{ -moz-appearance: textfield; }
+</style>
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal" id="JobForm">
+
+            <input type="hidden" id="id" value="${id}">
+
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">*岗位分类：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <select name="jobTypeId" id="jobTypeId" class="form-control" disabled>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">*岗位名称：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <input id="name" name="name" type="text" class="form-control" value="" placeholder="5~20个字" autocomplete="off" minlength="5" maxlength="40"  disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">*招聘数量：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <select name="num" id="num"  class="form-control" style="width: 95%;display: inline-block;" disabled>
+                        <option value="0">若干</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    名
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">*排序权重：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <input id="sort" name="sort" type="number" class="form-control" value="1" placeholder="" autocomplete="off"  disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">*岗位职责：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <textarea name="jobDuty" id="jobDuty" cols="30" rows="10" class="form-control"  disabled></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">*任职要求：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <textarea name="jobRequire" id="jobRequire" cols="30" rows="10" class="form-control"  disabled></textarea>
+                </div>
+            </div>
+
+
+            <div class="row btn-group-m-t">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;"></label>
+                <div class="col-sm-6 col-xs-8">
+                    <#button btnCss="danger" name="关闭" id="cancel" icon="" clickFun="JobInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/hire/job/job_info.js"></script>
+<script>
+    $(function(e){
+        var ajax = new $ax(Feng.ctxPath + "/job/detail", function(data){
+            if(data.code==200){
+                $("#jobTypeId").val(data.data.jobTypeId);
+                $("#name").val(data.data.name);
+                $("#num").val(data.data.num);
+                $("#sort").val(data.data.sort);
+                $("#jobDuty").text(data.data.jobDuty);
+                $("#jobRequire").val(data.data.jobRequire);
+            }
+        },function(data){
+            Feng.error("加载失败!" + data.responseJSON.message + "!");
+        });
+        ajax.set('id',$("#id").val());
+        ajax.start();
+    })
+</script>
+@}

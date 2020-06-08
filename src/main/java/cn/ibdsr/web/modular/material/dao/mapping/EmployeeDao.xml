@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.material.dao.EmployeeDao">
+
+    <select id="list" resultType="java.util.Map">
+        SELECT
+            t.id,
+            t.title,
+            t.is_publish isPublish,
+            DATE_FORMAT(
+                t.show_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) showTime,
+            DATE_FORMAT(
+                t.modified_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) modifiedTime
+        FROM
+            employee t
+        WHERE
+            t.is_deleted = 0
+        <if test="isPublish != null">
+            and t.is_publish = #{isPublish}
+        </if>
+        <if test="condition != null and condition != ''">
+            AND t.title LIKE CONCAT('%', #{condition}, '%')
+        </if>
+        <choose>
+            <when test="orderField != null and orderField !=''">
+                <choose>
+                    <when test="isAsc == true">
+                        <if test="orderField == 'showTime'">
+                            order by t.show_time ASC
+                        </if>
+                        <if test="orderField == 'modifiedTime'">
+                            order by t.modified_time ASC
+                        </if>
+                    </when>
+                    <otherwise>
+                        <if test="orderField == 'showTime'">
+                            order by t.show_time DESC
+                        </if>
+                        <if test="orderField == 'modifiedTime'">
+                            order by t.modified_time DESC
+                        </if>
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by t.show_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id"  parameterType="cn.ibdsr.web.common.persistence.model.Employee">
+        insert into employee
+        (
+            title,
+            main_content,
+            show_time,
+            cover_image,
+            created_user,
+            created_time,
+            modified_user,
+            modified_time,
+            is_publish,
+            is_deleted
+        )
+        values
+        (
+            #{addObj.title},
+            <![CDATA[
+              #{addObj.mainContent},
+            ]]>
+            #{addObj.showTime},
+            #{addObj.coverImage},
+            #{addObj.createdUser},
+            #{addObj.createdTime},
+            #{addObj.modifiedUser},
+            #{addObj.modifiedTime},
+            #{addObj.isPublish},
+            #{addObj.isDeleted}
+        )
+    </insert>
+
+    <update id="edit" parameterType="cn.ibdsr.web.common.persistence.model.Employee">
+        update employee
+        set
+            title = #{updateObj.title},
+            <![CDATA[
+              main_content = #{updateObj.mainContent},
+            ]]>
+            show_time = #{updateObj.showTime},
+            cover_image = #{updateObj.coverImage},
+            created_user = #{updateObj.createdUser},
+            created_time = #{updateObj.createdTime},
+            modified_user = #{updateObj.modifiedUser},
+            modified_time = #{updateObj.modifiedTime},
+            is_publish = #{updateObj.isPublish},
+            is_deleted = #{updateObj.isDeleted}
+        where
+            id = #{updateObj.id}
+    </update>
+
+    <select id="indexGetList" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            t.id,
+            t.title,
+            Date_format(t.show_time, '%Y/%m/%d') showTime,
+            t.cover_image coverImage,
+            t.main_content mainContent
+        FROM
+            employee t
+        WHERE
+            t.is_deleted = 0
+        AND t.is_publish = 1
+        order by t.show_time desc
+    </select>
+
+    <select id="indexEmployeeDetail" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            t.id,
+            t.title,
+            Date_format(t.show_time, '%Y/%m/%d') showTime,
+            t.cover_image coverImage,
+            t.main_content mainContent
+        FROM
+            employee t
+        WHERE
+            t.is_deleted = 0
+        AND t.is_publish = 1
+        <if test="employeeId != null">
+            and t.id = #{employeeId}
+        </if>
+    </select>
+</mapper>

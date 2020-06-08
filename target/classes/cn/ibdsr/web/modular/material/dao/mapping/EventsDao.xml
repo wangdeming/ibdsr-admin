@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.material.dao.EventsDao">
+
+    <select id="list" resultType="java.util.Map">
+        SELECT
+            t.id,
+            t.title,
+            t.event_year eventYear,
+            t.event_month eventMonth,
+            t.event_day eventDay,
+            DATE_FORMAT(
+                t.modified_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) modifiedTime
+        FROM
+            `events` t
+        WHERE
+            t.is_deleted = 0
+        <if test="condition != null and condition != ''">
+            AND t.title LIKE CONCAT('%', #{condition}, '%')
+        </if>
+        ORDER BY
+            t.event_year DESC,
+            t.event_month DESC,
+            t.event_day DESC,
+            t.modified_time DESC
+    </select>
+
+    <resultMap id="indexEventMap" type="com.alibaba.fastjson.JSONObject">
+        <result column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="event_year" property="eventYear" />
+        <result column="event_month" property="eventMonth" />
+        <result column="event_day" property="eventDay" />
+        <collection property="imageList" ofType="com.alibaba.fastjson.JSONObject" javaType="com.alibaba.fastjson.JSONArray">
+            <result column="path" property="imagePath" />
+        </collection>
+    </resultMap>
+
+    <select id="indexGetList" resultMap="indexEventMap">
+        SELECT
+            t.id,
+            t.title,
+            t.content,
+            t.event_year,
+            t.event_month,
+            t.event_day,
+            i.path
+        FROM
+            `events` t
+        LEFT JOIN event_image i ON t.id = i.event_id
+        AND i.is_deleted = 0
+        WHERE
+            t.is_deleted = 0
+        ORDER BY
+            t.event_year DESC,
+            t.event_month DESC,
+            t.event_day DESC
+    </select>
+</mapper>

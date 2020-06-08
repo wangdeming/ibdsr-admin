@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.material.dao.EventImageDao">
+
+    <insert id="insertBatch" parameterType="eventImage">
+        insert into event_image (path, event_id, created_time, created_user, is_deleted) value
+        <foreach collection="images" item="image" index="index" separator=",">
+            (
+                #{image.path},
+                #{image.eventId},
+                #{image.createdTime},
+                #{image.createdUser},
+                #{image.isDeleted}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

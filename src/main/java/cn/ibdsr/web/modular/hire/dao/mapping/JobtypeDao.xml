@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.hire.dao.JobtypeDao">
+
+    <select id="list" resultType="java.util.Map">
+        SELECT
+            t.id,
+            t.name,
+            COUNT(
+                CASE
+                WHEN j.is_deleted = 0 THEN
+                    j.id
+                END
+            ) jobCount,
+            COUNT(
+                CASE
+                WHEN j.is_publish = 1
+                AND j.is_deleted = 0 THEN
+                    j.id
+                END
+            ) publishCount
+        FROM
+            job_type t
+        LEFT JOIN job j ON j.job_type_id = t.id
+        WHERE
+            t.is_deleted = 0
+        GROUP BY
+            t.id
+        ORDER BY
+            t.sort
+    </select>
+
+    <select id="getMaxSort" resultType="java.lang.Integer">
+        SELECT
+            MAX(t.sort)
+        FROM
+            job_type t
+        WHERE
+            t.is_deleted = 0
+    </select>
+
+    <select id="getMinSort" resultType="java.lang.Integer">
+        SELECT
+            MIN(t.sort)
+        FROM
+            job_type t
+        WHERE
+            t.is_deleted = 0
+    </select>
+
+    <update id="resetSortBySort">
+        UPDATE job_type t
+        SET t.sort = t.sort - 1
+        WHERE
+            t.sort > #{sort}
+        and t.is_deleted = 0
+        and t.sort is not null
+    </update>
+
+    <select id="indexJobTypeList" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            a.*
+        from (
+            SELECT
+                t.id,
+                t.`name`,
+                COUNT(j.id) jobCount
+            FROM
+                job_type t
+            LEFT JOIN job j ON t.id = j.job_type_id
+            AND j.is_deleted = 0
+            AND j.is_publish = 1
+            WHERE
+                t.is_deleted = 0
+            GROUP BY
+                t.id
+            ORDER BY
+                t.sort
+        ) a
+        where a.jobCount > 0
+    </select>
+</mapper>

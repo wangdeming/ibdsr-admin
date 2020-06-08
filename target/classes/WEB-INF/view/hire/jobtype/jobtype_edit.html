@@ -1,0 +1,26 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal" id="JobTypeForm">
+
+            <input type="hidden" id="id" value="${jobType.id}">
+
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-4 control-label" style="text-align: right;padding-top: 7px;">岗位分类名称：</label>
+                <div class="col-sm-6 col-xs-8">
+                    <input id="name" name="name" type="text" class="form-control" value="${jobType.name}" placeholder="16个字符以内" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t" style="margin-top: 40px;text-align: center;">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="保存" id="ensure" icon="" clickFun="JobtypeInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="" clickFun="JobtypeInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/hire/jobtype/jobtype_info.js"></script>
+@}

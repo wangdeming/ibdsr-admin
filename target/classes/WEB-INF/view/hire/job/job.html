@@ -1,0 +1,57 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>招聘岗位</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button class="btn btn-primary" onclick="Job.openAddJob()"><i class="fa fa-plus"></i> 新增岗位</button>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="col-sm-3">
+                                   <lable> 岗位分类:</lable>
+                                    <select name="" id="jobTypeId" class="form-control" style="width: 60%;display: inline-block;">
+                                        <option value="">全部</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <lable> 状态:</lable>
+                                    <select name="" id="isPublish" class="form-control" style="width: 70%;display: inline-block;">
+                                        <option value="">全部</option>
+                                        <option value="1">发布中</option>
+                                        <option value="0">未发布</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="condition" placeholder="输入岗位名称关键字进行搜索">
+                                </div>
+                                <div class="col-sm-3">
+                                    <#button name="搜索" icon="fa-search" clickFun="Job.search()"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden-xs" id="JobTableToolbar" role="group">
+                            @if(shiro.hasPermission("/job/add")){
+                                <#button name="添加" icon="fa-plus" clickFun="Job.openAddJob()"/>
+                            @}
+                            @if(shiro.hasPermission("/job/update")){
+                                <#button name="修改" icon="fa-plus" clickFun="Job.openJobDetail()" space="true"/>
+                            @}
+                            @if(shiro.hasPermission("/job/delete")){
+                                <#button name="删除" icon="fa-plus" clickFun="Job.delete()" space="true"/>
+                            @}
+                        </div>
+                        <#table id="JobTable"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/hire/job/job.js"></script>
+@}

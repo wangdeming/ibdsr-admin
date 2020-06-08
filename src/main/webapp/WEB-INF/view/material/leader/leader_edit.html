@@ -1,0 +1,148 @@
+@layout("/common/_container.html"){
+<link rel="stylesheet" href="${ctxPath}/static/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css">
+<style>
+    textarea{
+        resize: none;
+    }
+    span.num {
+        position: absolute;
+        right: 23px;
+        top: 150px;
+    }
+    span.num i {
+        font-style: normal;
+    }
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    input[type="number"]{ -moz-appearance: textfield; }
+    .radio input[type="radio"] + label+input{
+        display: none;
+    }
+    .radio input[type="radio"]:checked + label+input{
+        display: inline-block;
+    }
+    .upImg-div{
+        padding-top: 7px;
+    }
+    .upImg-div ul{
+        overflow: hidden;
+        padding: 0;
+    }
+    .upImg-div ul li{
+        float: left;
+        width: 140px;
+        height: 80px;
+        position: relative;
+        text-align: center;
+        vertical-align: middle;
+        list-style: none;
+        line-height: 100px;
+        margin: 7px 7px 7px 0px;
+    }
+    .upImg-div ul li input{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        display: block;
+        left: 0;
+        top: 0;
+    }
+    .upImg-div ul li img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+    .div-img button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: none;
+        cursor: pointer;
+        border: 0;
+        font-size: 24px;
+        color: #333;
+        outline: none;
+        z-index: 3;
+        line-height: 0;
+    }
+</style>
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal" id="LeaderForm">
+
+            <input type="hidden" id="id" value="${leaderId}">
+
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label">*领导/来访者姓名：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <input id="leaderName" name="leaderName" type="text" class="form-control" value="" placeholder="2-40字符" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label" style="text-align: right;padding-top: 7px;">*新闻内容：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <textarea name="content" id="content" cols="30" rows="8" class="form-control" maxlength="140"></textarea>
+                    <span class="num"><i>0</i>/140</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label">*展示时间：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <div class="radio" style="display: inline-block;margin-right: 40px;padding-top: 9px;">
+                        <input type="radio" name="radio" id="radio" value="2" checked="checked">
+                        <label for="radio" id="showTime">
+
+                        </label>
+                    </div>
+                    <div class="radio" style="display: inline-block;margin-right: 40px;padding-top: 9px;">
+                        <input type="radio" name="radio" id="radio1" value="0">
+                        <label for="radio1">
+                            当前时间
+                        </label>
+                    </div>
+                    <div class="radio" style="display: inline-block;padding-top: 0;">
+                        <input type="radio"  id="radio2" value="1" name="radio">
+                        <label for="radio2">
+                            自定义时间
+                        </label>
+                        <input type="text" id="customTime" class="form-control" style="width: 60%;margin-left: 20px;">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label">*是否置顶：</label>
+                <div class="col-sm-8 col-xs-8">
+                    <select name="isTop" id="isTop" class="form-control">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-xs-3 control-label">*图片：</label>
+                <div class="col-sm-8 col-xs-8 upImg-div">
+                    <p>长宽比例7:4，推荐尺寸为1050*600px，每张图片的大小不超过5M.</p>
+                    <ul>
+                        <li style="border: 1px solid #e5e6e7;border-radius: 3px;">
+                            <i class="fa fa-plus fa-3x"></i>
+                            <input id="images" name="" type="file" data-src="">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row btn-group-m-t">
+                <label class="col-sm-3 col-xs-3 control-label"></label>
+                <div class="col-sm-8 col-xs-8">
+                    <#button btnCss="info" name="保存" id="ensure" icon="" clickFun="LeaderInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="" clickFun="LeaderInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/material/leader/leader_info.js"></script>
+<script src="${ctxPath}/static/modular/material/leader/leader_edit.js"></script>
+@}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ibdsr.web.modular.material.dao.LeaderDao">
+
+    <select id="list" resultType="java.util.Map">
+        SELECT
+            t.id,
+            t.leader_name leaderName,
+            t.is_publish isPublish,
+            t.is_top isTop,
+            DATE_FORMAT(
+                t.show_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) showTime,
+            DATE_FORMAT(
+                t.modified_time,
+                '%Y-%m-%d %H:%i:%s'
+            ) modifiedTime
+        FROM
+            leader_words t
+        WHERE
+            t.is_deleted = 0
+        <if test="isPublish != null">
+            and t.is_publish = #{isPublish}
+        </if>
+        <if test="condition != null and condition != ''">
+            AND t.leader_name LIKE CONCAT('%', #{condition}, '%')
+        </if>
+        <choose>
+            <when test="orderField != null and orderField !=''">
+                <choose>
+                    <when test="isAsc == true">
+                        <if test="orderField == 'isTop'">
+                            order by t.is_top ASC
+                        </if>
+                        <if test="orderField == 'showTime'">
+                            order by t.show_time ASC
+                        </if>
+                        <if test="orderField == 'modifiedTime'">
+                            order by t.modified_time ASC
+                        </if>
+                    </when>
+                    <otherwise>
+                        <if test="orderField == 'isTop'">
+                            order by t.is_top DESC
+                        </if>
+                        <if test="orderField == 'showTime'">
+                            order by t.show_time DESC
+                        </if>
+                        <if test="orderField == 'modifiedTime'">
+                            order by t.modified_time DESC
+                        </if>
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by t.is_top DESC, t.show_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <resultMap id="indexLeaderMap" type="com.alibaba.fastjson.JSONObject">
+        <result column="id" property="id" />
+        <result column="content" property="content" />
+        <result column="showTime" property="showTime" />
+        <collection property="imageList" ofType="com.alibaba.fastjson.JSONObject" javaType="com.alibaba.fastjson.JSONArray">
+            <result column="path" property="imagePath" />
+        </collection>
+    </resultMap>
+
+    <select id="indexGetList" resultMap="indexLeaderMap">
+        SELECT
+            t.id,
+            t.content,
+            DATE_FORMAT(t.show_time, '%Y-%m-%d') showTime,
+            i.path
+        FROM
+            leader_words t
+        LEFT JOIN leader_image i ON t.id = i.leader_words_id
+        AND i.is_deleted = 0
+        WHERE
+            t.is_deleted = 0
+        AND t.is_publish = 1
+        ORDER BY
+            t.is_top DESC,
+            t.show_time DESC
+    </select>
+
+    <select id="indexLeaderDetail" resultMap="indexLeaderMap">
+        SELECT
+            t.id,
+            t.content,
+            DATE_FORMAT(t.show_time, '%Y-%m-%d') showTime,
+            i.path
+        FROM
+            leader_words t
+        LEFT JOIN leader_image i ON t.id = i.leader_words_id
+        AND i.is_deleted = 0
+        WHERE
+            t.is_deleted = 0
+        AND t.is_publish = 1
+        and t.id = #{leaderId}
+        ORDER BY
+            t.is_top DESC,
+            t.show_time DESC
+    </select>
+</mapper>
